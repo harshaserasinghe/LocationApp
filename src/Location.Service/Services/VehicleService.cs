@@ -21,7 +21,6 @@ namespace Location.Service.Services
             this.cosmoDBConfig = cosmoDBConfig.Value;
             this.cosmosDBService = cosmosDBService;
         }
-   
 
         public async Task<VehicleDto> GetVehicleAsync(string vehicleId)
         {

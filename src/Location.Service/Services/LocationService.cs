@@ -34,25 +34,13 @@ namespace Location.Service.Services
 
             await cosmosDBService.AddEntityAsync(location, cosmoDBConfig.LocationContainerId);
             location.UpdateId();
-            await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);
-            //try
-            //{
-            //    await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId, location.VehicleId);
-            //}
-            //catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-            //{
-            //    await cosmosDBService.AddEntityAsync(location,cosmoDBConfig.CurrentLocationContainerId);
-            //}           
+            await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);        
         }
 
         public async Task<Entities.Location> GetCurrentLocationAsync(string vehicleId)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
                 throw new Exception("This is not a registered vehicle");//To do
-
-            //var query = $"select * from location where location.VehicleId = '{vehicleId}'";
-            //var location = (await cosmosDBService.GetEntitiesAsync<Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, query)).FirstOrDefault();
-            //return location;
 
             try
             {
