@@ -5,9 +5,7 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Location.Service.Services
@@ -30,28 +28,27 @@ namespace Location.Service.Services
         public async Task AddLocationAsync(LocationCreateDto locationDto)
         {
             if (!await vehicleService.IsRegisteredAsync(locationDto.VehicleId))
-                throw new Exception("This is not a registered vehicle");
+                throw new Exception("This is not a registered vehicle"); //To do
 
             var location = new Entities.Location(locationDto.VehicleId, locationDto.Latitude, locationDto.Longitude, locationDto.CreatedDate);
 
-            try
-            {
-                await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId, location.VehicleId);
-            }
-            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
-            {
-
-                await cosmosDBService.AddEntityAsync(location,cosmoDBConfig.CurrentLocationContainerId);
-            }
-
-            location.SetNewId();
             await cosmosDBService.AddEntityAsync(location, cosmoDBConfig.LocationContainerId);
+            location.UpdateId();
+            await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);
+            //try
+            //{
+            //    await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId, location.VehicleId);
+            //}
+            //catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
+            //{
+            //    await cosmosDBService.AddEntityAsync(location,cosmoDBConfig.CurrentLocationContainerId);
+            //}           
         }
 
-        public async Task<Entities.Location> GetLocationAsync(string vehicleId)
+        public async Task<Entities.Location> GetCurrentLocationAsync(string vehicleId)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Exception("This is not a registered vehicle");
+                throw new Exception("This is not a registered vehicle");//To do
 
             //var query = $"select * from location where location.VehicleId = '{vehicleId}'";
             //var location = (await cosmosDBService.GetEntitiesAsync<Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, query)).FirstOrDefault();
@@ -71,7 +68,7 @@ namespace Location.Service.Services
         public async Task<List<Entities.Location>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Exception("This is not a registered vehicle");
+                throw new Exception("This is not a registered vehicle");//To do
 
             var query = $"select * from location " +
                 $"where location.VehicleId = '{vehicleId}' and " +

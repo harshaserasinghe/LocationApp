@@ -1,9 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Location.Service.Entities
 {
@@ -11,7 +7,7 @@ namespace Location.Service.Entities
     {
         public Location(string vehicleId, double latitude, double longitude, DateTime createdDate)
         {
-            Id = vehicleId;
+            Id = Guid.NewGuid().ToString();
             VehicleId = vehicleId;
             Latitude = latitude;
             Longitude = longitude;
@@ -25,6 +21,6 @@ namespace Location.Service.Entities
         public double Longitude { get; set; }
         public DateTime CreatedDate { get; set; }
 
-        public void SetNewId() => this.Id = Guid.NewGuid().ToString();
+        public void UpdateId() => Id = VehicleId;
     }
 }

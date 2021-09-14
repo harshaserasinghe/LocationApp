@@ -2,10 +2,7 @@
 using Location.Service.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Location.Service.Services
@@ -35,12 +32,11 @@ namespace Location.Service.Services
             await container.CreateItemAsync<T>(entity);
         }
 
-        public async Task UpdateEntityAsync<T>(T entity, string containerId, string partitionKey, string id)
+        public async Task UpdateEntityAsync<T>(T entity, string containerId, string partitionKey)
         {
             var container = GetContainer(containerId);
-            await container.ReplaceItemAsync<T>(entity, id, new PartitionKey(partitionKey));
+            await container.UpsertItemAsync<T>(entity, new PartitionKey(partitionKey));
         }
-
 
         public async Task<List<T>> GetEntitiesAsync<T>(string containerId, string query)
         {

@@ -5,10 +5,7 @@ using Location.Service.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Location.Service.Services
@@ -24,19 +21,7 @@ namespace Location.Service.Services
             this.cosmoDBConfig = cosmoDBConfig.Value;
             this.cosmosDBService = cosmosDBService;
         }
-
-        public async Task AddVehicleAsync(VehicleCreateDto vehicleDto)
-        {
-            try
-            {
-                var vehicle = new Vehicle(vehicleDto.VehicleId, vehicleDto.LicenceNo);
-                await cosmosDBService.AddEntityAsync(vehicle, cosmoDBConfig.VehicleContainerId);
-            }
-            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
-            {
-                throw new Exception("This is a registered vehicle");
-            }
-        }
+   
 
         public async Task<VehicleDto> GetVehicleAsync(string vehicleId)
         {
@@ -50,7 +35,20 @@ namespace Location.Service.Services
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                throw new Exception("This is not a registered vehicle");
+                return null;
+            }
+        }
+
+        public async Task AddVehicleAsync(VehicleCreateDto vehicleDto)
+        {
+            try
+            {
+                var vehicle = new Vehicle(vehicleDto.VehicleId, vehicleDto.LicenceNo);
+                await cosmosDBService.AddEntityAsync(vehicle, cosmoDBConfig.VehicleContainerId);
+            }
+            catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
+            {
+                throw new Exception("This is a registered vehicle");//To do
             }
         }
 

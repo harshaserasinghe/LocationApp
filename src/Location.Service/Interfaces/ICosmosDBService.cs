@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Location.Service.Interfaces
@@ -11,7 +8,7 @@ namespace Location.Service.Interfaces
         Task<T> GetEntityAsync<T>(string containerId, string partitionKey, string id);
         Task<List<T>> GetEntitiesAsync<T>(string containerId, string query);
         Task AddEntityAsync<T>(T entity, string containerId);
-        Task UpdateEntityAsync<T>(T entity, string containerId, string partitionKey, string id);
+        Task UpdateEntityAsync<T>(T entity, string containerId, string partitionKey);
         Task DeleteEntityAsync<T>(string containerId, string partitionKey, string id);
     }
 }
