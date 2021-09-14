@@ -1,3 +1,6 @@
+using Location.Common.Settings;
+using Location.Service.Interfaces;
+using Location.Service.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -25,10 +28,10 @@ namespace Location.API
         }
 
         public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<CosmoDBConfig>(Configuration.GetSection("CosmosDB"));
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
@@ -37,6 +40,10 @@ namespace Location.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Location.API", Version = "v1" });
             });
+
+            services.AddScoped<ICosmosDBService, CosmosDBService>();
+            services.AddScoped<IVehicleService, VehicleService>();
+            services.AddScoped<ILocationService, LocationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\Location.Service\Location.Service.csproj" />
   </ItemGroup>
 
 </Project>
