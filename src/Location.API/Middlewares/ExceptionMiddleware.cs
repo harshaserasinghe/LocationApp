@@ -1,6 +1,7 @@
 ﻿using Location.Common.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Net;
@@ -10,18 +11,20 @@ namespace Location.API.Middlewares
 {
     public class ExceptionMiddleware
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate next;
+        private readonly ILogger<ExceptionMiddleware> logger;
 
-        public ExceptionMiddleware(RequestDelegate next)
+        public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
         {
-            _next = next;
+            this.next = next;
+            this.logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext httpContext)
         {
             try
             {
-                await _next(httpContext);
+                await next(httpContext);
             }
             catch (Common.Exceptions.ApplicationException exception)
             {
@@ -32,6 +35,7 @@ namespace Location.API.Middlewares
         private async Task HandleApplicationExceptionAsync(HttpContext httpContext, Common.Exceptions.ApplicationException exception)
         {
             var errorModel = new ErrorModel(exception.ErrorCode, exception.Message);
+            logger.LogWarning(errorModel.ToString());
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = exception.ErrorCode;
             await httpContext.Response.WriteAsync(errorModel.ToString());
