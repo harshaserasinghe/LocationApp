@@ -14,7 +14,7 @@ namespace Location.API.Controllers
     {
         private readonly IVehicleService vehicleService;
         private readonly ILocationService locationService;
-        public VehiclesController(IVehicleService vehicleService,ILocationService locationService)
+        public VehiclesController(IVehicleService vehicleService, ILocationService locationService)
         {
             this.vehicleService = vehicleService;
             this.locationService = locationService;
@@ -30,17 +30,17 @@ namespace Location.API.Controllers
         }
 
         [HttpGet("{vehicleId}/current-location")]
-        [ProducesResponseType(typeof(Service.Entities.Location), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(LocationDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<Service.Entities.Location>> GetCurrentLocationAsync([FromRoute] string vehicleId)
+        public async Task<ActionResult<LocationDto>> GetCurrentLocationAsync([FromRoute] string vehicleId)
         {
             var location = await locationService.GetCurrentLocationAsync(vehicleId);
             return Ok(location);
         }
 
         [HttpGet("{vehicleId}/locations")]
-        [ProducesResponseType(typeof(List<Service.Entities.Location>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<List<Service.Entities.Location>>> GetLocationsAsync([FromRoute]string vehicleId, [FromQuery] DateTime fromDateTime, [FromQuery] DateTime toDateTime)
+        [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery] DateTime fromDateTime, [FromQuery] DateTime toDateTime)
         {
             var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
             return Ok(locationList);
@@ -49,9 +49,9 @@ namespace Location.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult> AddVehicleAsync([FromBody]VehicleCreateDto vehicleDto)
+        public async Task<ActionResult> AddVehicleAsync([FromBody] VehicleCreateDto VehicleCreateDto)
         {
-            await vehicleService.AddVehicleAsync(vehicleDto);
+            await vehicleService.AddVehicleAsync(VehicleCreateDto);
             return Ok();
         }
     }

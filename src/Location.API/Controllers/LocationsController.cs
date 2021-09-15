@@ -19,10 +19,10 @@ namespace Location.API.Controllers
         [HttpPost]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<IActionResult> AddLocationAsync([FromBody] LocationCreateDto locationDto)
+        public async Task<IActionResult> AddLocationAsync([FromBody] LocationCreateDto locationCreateDto)
         {
-            await locationService.AddLocationAsync(locationDto);
+            await locationService.AddLocationAsync(locationCreateDto);
             return Ok();
-        }      
+        }
     }
 }

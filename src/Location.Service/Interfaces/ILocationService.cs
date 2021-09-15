@@ -7,8 +7,8 @@ namespace Location.Service.Interfaces
 {
     public interface ILocationService
     {
-        Task AddLocationAsync(LocationCreateDto locationDto);
-        Task<Entities.Location> GetCurrentLocationAsync(string vehicleId);
-        Task<List<Entities.Location>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime);
+        Task AddLocationAsync(LocationCreateDto locationCreateDto);
+        Task<LocationDto> GetCurrentLocationAsync(string vehicleId);
+        Task<List<LocationDto>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime);
     }
 }

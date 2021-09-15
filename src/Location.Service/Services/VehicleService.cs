@@ -1,4 +1,5 @@
-﻿using Location.Common.Exceptions;
+﻿using AutoMapper;
+using Location.Common.Exceptions;
 using Location.Common.Settings;
 using Location.Service.Dtos;
 using Location.Service.Entities;
@@ -14,11 +15,14 @@ namespace Location.Service.Services
     {
         private readonly CosmoDBConfig cosmoDBConfig;
         private readonly ICosmosDBService cosmosDBService;
+        private readonly IMapper mapper;
 
         public VehicleService(IOptions<CosmoDBConfig> cosmoDBConfig,
+            IMapper mapper,
             ICosmosDBService cosmosDBService)
         {
             this.cosmoDBConfig = cosmoDBConfig.Value;
+            this.mapper = mapper;
             this.cosmosDBService = cosmosDBService;
         }
 
@@ -27,9 +31,7 @@ namespace Location.Service.Services
             try
             {
                 var vehicle = await cosmosDBService.GetEntityAsync<Vehicle>(cosmoDBConfig.VehicleContainerId, vehicleId, vehicleId);
-                var vehicleDto = new VehicleDto();
-                vehicleDto.VehicleId = vehicle.VehicleId;
-                vehicleDto.LicenceNo = vehicle.LicenceNo;
+                var vehicleDto = mapper.Map<VehicleDto>(vehicle);
                 return vehicleDto;
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
@@ -38,11 +40,11 @@ namespace Location.Service.Services
             }
         }
 
-        public async Task AddVehicleAsync(VehicleCreateDto vehicleDto)
+        public async Task AddVehicleAsync(VehicleCreateDto VehicleCreateDto)
         {
             try
             {
-                var vehicle = new Vehicle(vehicleDto.VehicleId, vehicleDto.LicenceNo);
+                var vehicle = mapper.Map<Vehicle>(VehicleCreateDto);
                 await cosmosDBService.AddEntityAsync(vehicle, cosmoDBConfig.VehicleContainerId);
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.Conflict)

@@ -1,4 +1,5 @@
-﻿using Location.Common.Settings;
+﻿using AutoMapper;
+using Location.Common.Settings;
 using Location.Service.Dtos;
 using Location.Service.Interfaces;
 using Microsoft.Azure.Cosmos;
@@ -13,31 +14,34 @@ namespace Location.Service.Services
     public class LocationService : ILocationService
     {
         private readonly CosmoDBConfig cosmoDBConfig;
+        private readonly IMapper mapper;
         private readonly ICosmosDBService cosmosDBService;
         private readonly IVehicleService vehicleService;
 
         public LocationService(IOptions<CosmoDBConfig> cosmoDBConfig,
+            IMapper mapper,
             ICosmosDBService cosmosDBService,
             IVehicleService vehicleService)
         {
             this.cosmoDBConfig = cosmoDBConfig.Value;
+            this.mapper = mapper;
             this.cosmosDBService = cosmosDBService;
             this.vehicleService = vehicleService;
         }
 
-        public async Task AddLocationAsync(LocationCreateDto locationDto)
+        public async Task AddLocationAsync(LocationCreateDto locationCreateDto)
         {
-            if (!await vehicleService.IsRegisteredAsync(locationDto.VehicleId))
+            if (!await vehicleService.IsRegisteredAsync(locationCreateDto.VehicleId))
                 throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is not registered");
 
-            var location = new Entities.Location(locationDto.VehicleId, locationDto.Latitude, locationDto.Longitude, locationDto.CreatedDate);
+            var location = mapper.Map<Entities.Location>(locationCreateDto);
 
             await cosmosDBService.AddEntityAsync(location, cosmoDBConfig.LocationContainerId);
             location.UpdateId();
             await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);
         }
 
-        public async Task<Entities.Location> GetCurrentLocationAsync(string vehicleId)
+        public async Task<LocationDto> GetCurrentLocationAsync(string vehicleId)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
                 throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
@@ -45,7 +49,8 @@ namespace Location.Service.Services
             try
             {
                 var location = await cosmosDBService.GetEntityAsync<Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, vehicleId, vehicleId);
-                return location;
+                var locationDto = mapper.Map<LocationDto>(location);
+                return locationDto;
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
@@ -53,7 +58,7 @@ namespace Location.Service.Services
             }
         }
 
-        public async Task<List<Entities.Location>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime)
+        public async Task<List<LocationDto>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
                 throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
@@ -64,7 +69,8 @@ namespace Location.Service.Services
                 $"location.CreatedDate <= '{toDateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")}'";
 
             var locationList = await cosmosDBService.GetEntitiesAsync<Entities.Location>(cosmoDBConfig.LocationContainerId, query);
-            return locationList;
+            var locationDtoList = mapper.Map<List<LocationDto>>(locationList);
+            return locationDtoList;
         }
     }
 }

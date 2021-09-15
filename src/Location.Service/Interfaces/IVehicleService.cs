@@ -6,7 +6,7 @@ namespace Location.Service.Interfaces
     public interface IVehicleService
     {
         Task<VehicleDto> GetVehicleAsync(string vehcileId);
-        Task AddVehicleAsync(VehicleCreateDto vehicleDto);
+        Task AddVehicleAsync(VehicleCreateDto VehicleCreateDto);
         Task<bool> IsRegisteredAsync(string vehcileId);
     }
 }

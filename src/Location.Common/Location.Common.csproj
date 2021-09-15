@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Mappers\**" />
+    <EmbeddedResource Remove="Mappers\**" />
+    <None Remove="Mappers\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Loggers\" />
-    <Folder Include="Mappers\" />
     <Folder Include="Validations\" />
   </ItemGroup>
 
