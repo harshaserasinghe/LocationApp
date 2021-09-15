@@ -1,3 +1,4 @@
+using FluentValidation.AspNetCore;
 using GlobalErrorHandling.Extensions;
 using Location.Common.Settings;
 using Location.Service.Interfaces;
@@ -37,7 +38,11 @@ namespace Location.API
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation(opt =>
+            {
+                opt.RegisterValidatorsFromAssembly(Assembly.Load("Location.API"));
+            }); 
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Location.API", Version = "v1" });
