@@ -3,6 +3,7 @@ using Location.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -40,7 +41,7 @@ namespace Location.API.Controllers
 
         [HttpGet("{vehicleId}/locations")]
         [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery] DateTime fromDateTime, [FromQuery] DateTime toDateTime)
+        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
         {
             var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
             return Ok(locationList);
