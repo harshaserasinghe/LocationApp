@@ -28,19 +28,19 @@ namespace Location.Service.Services
         public async Task AddLocationAsync(LocationCreateDto locationDto)
         {
             if (!await vehicleService.IsRegisteredAsync(locationDto.VehicleId))
-                throw new Exception("This is not a registered vehicle"); //To do
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is not registered");
 
             var location = new Entities.Location(locationDto.VehicleId, locationDto.Latitude, locationDto.Longitude, locationDto.CreatedDate);
 
             await cosmosDBService.AddEntityAsync(location, cosmoDBConfig.LocationContainerId);
             location.UpdateId();
-            await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);        
+            await cosmosDBService.UpdateEntityAsync(location, cosmoDBConfig.CurrentLocationContainerId, location.VehicleId);
         }
 
         public async Task<Entities.Location> GetCurrentLocationAsync(string vehicleId)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Exception("This is not a registered vehicle");//To do
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
 
             try
             {
@@ -49,14 +49,14 @@ namespace Location.Service.Services
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                return null;
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Location data is not available ");
             }
         }
 
         public async Task<List<Entities.Location>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Exception("This is not a registered vehicle");//To do
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
 
             var query = $"select * from location " +
                 $"where location.VehicleId = '{vehicleId}' and " +

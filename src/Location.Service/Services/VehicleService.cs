@@ -1,10 +1,10 @@
-﻿using Location.Common.Settings;
+﻿using Location.Common.Exceptions;
+using Location.Common.Settings;
 using Location.Service.Dtos;
 using Location.Service.Entities;
 using Location.Service.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
-using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -34,7 +34,7 @@ namespace Location.Service.Services
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                return null;
+                throw new ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
             }
         }
 
@@ -47,7 +47,7 @@ namespace Location.Service.Services
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.Conflict)
             {
-                throw new Exception("This is a registered vehicle");//To do
+                throw new ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is already registered");
             }
         }
 

@@ -1,3 +1,4 @@
+using GlobalErrorHandling.Extensions;
 using Location.Common.Settings;
 using Location.Service.Interfaces;
 using Location.Service.Services;
@@ -46,7 +47,6 @@ namespace Location.API
             services.AddScoped<ILocationService, LocationService>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -55,6 +55,8 @@ namespace Location.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Location.API v1"));
             }
+
+            app.ConfigureCustomExceptionMiddleware();
 
             app.UseHttpsRedirection();
 

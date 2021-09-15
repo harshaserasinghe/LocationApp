@@ -26,10 +26,6 @@ namespace Location.API.Controllers
         public async Task<ActionResult<VehicleDto>> GetVehicleAsync(string vehicleId)
         {
             var vehicle = await vehicleService.GetVehicleAsync(vehicleId);
-
-            if (vehicle is null)
-                return NotFound("This is not a registered vehicle");
-
             return Ok(vehicle);
         }
 
@@ -39,10 +35,6 @@ namespace Location.API.Controllers
         public async Task<ActionResult<Service.Entities.Location>> GetCurrentLocationAsync([FromRoute] string vehicleId)
         {
             var location = await locationService.GetCurrentLocationAsync(vehicleId);
-
-            if (location is null)
-                return NotFound("Current location is not found");
-
             return Ok(location);
         }
 
