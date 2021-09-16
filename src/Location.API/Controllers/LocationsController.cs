@@ -1,5 +1,6 @@
 ﻿using Location.Service.Dtos;
 using Location.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,8 +18,10 @@ namespace Location.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "vehicle.policy")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<IActionResult> AddLocationAsync([FromBody] LocationCreateDto locationCreateDto)
         {
             await locationService.AddLocationAsync(locationCreateDto);

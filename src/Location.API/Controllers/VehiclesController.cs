@@ -1,5 +1,6 @@
 ﻿using Location.Service.Dtos;
 using Location.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -31,8 +32,10 @@ namespace Location.API.Controllers
         }
 
         [HttpGet("{vehicleId}/current-location")]
+        [Authorize(Policy = "admin.policy")]
         [ProducesResponseType(typeof(LocationDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult<LocationDto>> GetCurrentLocationAsync([FromRoute] string vehicleId)
         {
             var location = await locationService.GetCurrentLocationAsync(vehicleId);
@@ -40,7 +43,9 @@ namespace Location.API.Controllers
         }
 
         [HttpGet("{vehicleId}/locations")]
+        [Authorize(Policy = "admin.policy")]
         [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
         {
             var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
@@ -48,8 +53,10 @@ namespace Location.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "vehicle.policy")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult> AddVehicleAsync([FromBody] VehicleCreateDto VehicleCreateDto)
         {
             await vehicleService.AddVehicleAsync(VehicleCreateDto);
