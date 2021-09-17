@@ -22,7 +22,7 @@ namespace Location.API.Controllers
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<IActionResult> AddLocationAsync([FromBody] LocationCreateDto locationCreateDto)
+        public async Task<ActionResult> AddLocationAsync([FromBody] LocationCreateDto locationCreateDto)
         {
             await locationService.AddLocationAsync(locationCreateDto);
             return Ok();

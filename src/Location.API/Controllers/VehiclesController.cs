@@ -23,33 +23,14 @@ namespace Location.API.Controllers
         }
 
         [HttpGet("{vehicleId}")]
+        [Authorize(Policy = "vehicle.policy")]
         [ProducesResponseType(typeof(VehicleDto), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
         public async Task<ActionResult<VehicleDto>> GetVehicleAsync(string vehicleId)
         {
-            var vehicle = await vehicleService.GetVehicleAsync(vehicleId);
-            return Ok(vehicle);
-        }
-
-        [HttpGet("{vehicleId}/current-location")]
-        [Authorize(Policy = "admin.policy")]
-        [ProducesResponseType(typeof(LocationDto), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<LocationDto>> GetCurrentLocationAsync([FromRoute] string vehicleId)
-        {
-            var location = await locationService.GetCurrentLocationAsync(vehicleId);
-            return Ok(location);
-        }
-
-        [HttpGet("{vehicleId}/locations")]
-        [Authorize(Policy = "admin.policy")]
-        [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
-        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
-        {
-            var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
-            return Ok(locationList);
+            var vehicleDto = await vehicleService.GetVehicleAsync(vehicleId);
+            return Ok(vehicleDto);
         }
 
         [HttpPost]
@@ -61,6 +42,29 @@ namespace Location.API.Controllers
         {
             await vehicleService.AddVehicleAsync(VehicleCreateDto);
             return Ok();
+        }
+
+        [HttpGet("{vehicleId}/current-location")]
+        [Authorize(Policy = "admin.policy")]
+        [ProducesResponseType(typeof(LocationDto), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        public async Task<ActionResult<LocationDto>> GetCurrentLocationAsync([FromRoute] string vehicleId)
+        {
+            var location = await locationService.GetCurrentLocationAsync(vehicleId);
+            return Ok(location);
+        }
+
+        [HttpGet("{vehicleId}/locations")]
+        [Authorize(Policy = "admin.policy")]
+        [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.Forbidden)]
+        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
+        {
+            var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
+            return Ok(locationList);
         }
     }
 }

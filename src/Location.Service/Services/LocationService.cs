@@ -44,7 +44,7 @@ namespace Location.Service.Services
         public async Task<LocationDto> GetCurrentLocationAsync(string vehicleId)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is not registered");
 
             try
             {
@@ -54,14 +54,14 @@ namespace Location.Service.Services
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)
             {
-                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Location data is not available ");
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Location data is not available");
             }
         }
 
         public async Task<List<LocationDto>> GetLocationListAsync(string vehicleId, DateTime fromDateTime, DateTime toDateTime)
         {
             if (!await vehicleService.IsRegisteredAsync(vehicleId))
-                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.NotFound, "Vehicle is not registered");
+                throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is not registered");
 
             var query = $"select * from location " +
                 $"where location.VehicleId = '{vehicleId}' and " +

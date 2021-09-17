@@ -3,24 +3,14 @@ using GlobalErrorHandling.Extensions;
 using Location.Common.Settings;
 using Location.Service.Interfaces;
 using Location.Service.Services;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Location.API
 {
@@ -34,6 +24,8 @@ namespace Location.API
         public IConfiguration Configuration { get; }
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = Configuration.GetSection("Identity").Get<IdentityConfig>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Location.API", Version = "v1" });
@@ -68,18 +60,18 @@ namespace Location.API
             services.AddAuthentication("Bearer")
                         .AddIdentityServerAuthentication("Bearer", options =>
                         {
-                            options.Authority = "https://localhost:6001";
+                            options.Authority = config.Server;
                         });
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("vehicle.policy", policy =>
+                options.AddPolicy(config.Policies["Vehicle"], policy =>
                 {
-                    policy.RequireClaim("scope", "vehicle.scope");
+                    policy.RequireClaim("scope", config.Scopes["Vehicle"]);
                 });
-                options.AddPolicy("admin.policy", policy =>
+                options.AddPolicy(config.Policies["Admin"], policy =>
                 {
-                    policy.RequireClaim("scope", "admin.scope");
+                    policy.RequireClaim("scope", config.Scopes["Admin"]);
                 });
             });
 

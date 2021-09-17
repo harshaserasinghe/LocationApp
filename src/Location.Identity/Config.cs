@@ -26,7 +26,7 @@ namespace Location.Identity
                 ClientId = "vehicle.client",
                 ClientName = "Client Credentials vehicle",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("secret".Sha256()) },
+                ClientSecrets = { new Secret("3fbd0681-2163-4135-bb62-0c048f3700de".Sha256()) },
                 AllowedScopes = { "vehicle.scope" }
             },
             new Client
@@ -34,7 +34,7 @@ namespace Location.Identity
                 ClientId = "admin.client",
                 ClientName = "Client Credentials admin",
                 AllowedGrantTypes = GrantTypes.ClientCredentials,
-                ClientSecrets = { new Secret("secret".Sha256()) },
+                ClientSecrets = { new Secret("4f7e8675-0e22-422a-844d-9dc85a274237".Sha256()) },
                 AllowedScopes = { "admin.scope" }
             }
         };
@@ -44,7 +44,7 @@ namespace Location.Identity
             {
                 new ApiResource("Location Api"){
                     Scopes = new List<string>{ },
-                    ApiSecrets = new List<Secret>{ new Secret("supersecret".Sha256()) }
+                    ApiSecrets = new List<Secret>{ new Secret("9f418a99-f083-484c-9340-e637c3eff7eb".Sha256()) }
                 }
             };
     }
