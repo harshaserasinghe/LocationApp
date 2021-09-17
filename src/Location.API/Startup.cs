@@ -86,6 +86,7 @@ namespace Location.API
             services.AddScoped<ICosmosDBService, CosmosDBService>();
             services.AddScoped<IVehicleService, VehicleService>();
             services.AddScoped<ILocationService, LocationService>();
+            services.AddScoped<IMapService, MapService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
