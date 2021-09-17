@@ -20,4 +20,8 @@
     <ProjectReference Include="..\Location.Service\Location.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Logs\" />
+  </ItemGroup>
+
 </Project>

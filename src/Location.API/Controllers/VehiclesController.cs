@@ -61,7 +61,8 @@ namespace Location.API.Controllers
         [ProducesResponseType(typeof(List<LocationDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.Forbidden)]
-        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
+        public async Task<ActionResult<List<LocationDto>>> GetLocationsAsync([FromRoute] string vehicleId, 
+            [FromQuery][Required] DateTime fromDateTime, [FromQuery][Required] DateTime toDateTime)
         {
             var locationList = await locationService.GetLocationListAsync(vehicleId, fromDateTime, toDateTime);
             return Ok(locationList);
