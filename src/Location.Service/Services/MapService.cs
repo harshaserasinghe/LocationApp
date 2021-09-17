@@ -50,7 +50,7 @@ namespace Location.Service.Services
                 return string.Empty;          
 
             var locality = mapDto.Results.FirstOrDefault()
-                .AddressComponents.FirstOrDefault(address => address.Types.Any(addrType => addrType.ToLower() == "locality")).LongName;
+                .AddressComponents.FirstOrDefault(address => address.Types.Any(addrType => addrType.ToLower() == "locality"))?.LongName;
 
             return locality;
         }
