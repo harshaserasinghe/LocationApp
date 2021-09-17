@@ -5,10 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Exceptions\" />
+    <Compile Remove="Mappers\**" />
+    <Compile Remove="Validations\**" />
+    <EmbeddedResource Remove="Mappers\**" />
+    <EmbeddedResource Remove="Validations\**" />
+    <None Remove="Mappers\**" />
+    <None Remove="Validations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Loggers\" />
-    <Folder Include="Mappers\" />
-    <Folder Include="Validations\" />
   </ItemGroup>
 
 </Project>
