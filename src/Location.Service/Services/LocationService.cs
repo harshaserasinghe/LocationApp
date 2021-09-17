@@ -17,16 +17,19 @@ namespace Location.Service.Services
         private readonly IMapper mapper;
         private readonly ICosmosDBService cosmosDBService;
         private readonly IVehicleService vehicleService;
+        private readonly IMapService mapService;
 
         public LocationService(IOptions<CosmoDBConfig> cosmoDBConfig,
             IMapper mapper,
             ICosmosDBService cosmosDBService,
-            IVehicleService vehicleService)
+            IVehicleService vehicleService,
+            IMapService mapService)
         {
             this.cosmoDBConfig = cosmoDBConfig.Value;
             this.mapper = mapper;
             this.cosmosDBService = cosmosDBService;
             this.vehicleService = vehicleService;
+            this.mapService = mapService;
         }
 
         public async Task AddLocationAsync(LocationCreateDto locationCreateDto)
@@ -50,6 +53,8 @@ namespace Location.Service.Services
             {
                 var location = await cosmosDBService.GetEntityAsync<Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, vehicleId, vehicleId);
                 var locationDto = mapper.Map<LocationDto>(location);
+                var locality = await mapService.GetLocality(locationDto.Latitude, locationDto.Longitude);
+                locationDto.SetLocality(locality);
                 return locationDto;
             }
             catch (CosmosException ex) when (ex.StatusCode == HttpStatusCode.NotFound)

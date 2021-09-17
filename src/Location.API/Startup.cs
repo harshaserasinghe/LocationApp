@@ -25,6 +25,8 @@ namespace Location.API
         public void ConfigureServices(IServiceCollection services)
         {
             var config = Configuration.GetSection("Identity").Get<IdentityConfig>();
+            services.Configure<CosmoDBConfig>(Configuration.GetSection("CosmosDB"));
+            services.Configure<GoogleMapConfig>(Configuration.GetSection("GoogleMap"));
 
             services.AddSwaggerGen(c =>
             {
@@ -54,8 +56,6 @@ namespace Location.API
                     }
                 });
             });
-
-            services.Configure<CosmoDBConfig>(Configuration.GetSection("CosmosDB"));
 
             services.AddAuthentication("Bearer")
                         .AddIdentityServerAuthentication("Bearer", options =>

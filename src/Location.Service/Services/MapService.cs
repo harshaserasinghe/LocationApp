@@ -1,4 +1,8 @@
-﻿using Location.Service.Dtos.Google;
+﻿using Location.Common.Settings;
+using Location.Service.Dtos.Google;
+using Location.Service.Interfaces;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -9,41 +13,47 @@ namespace Location.Service.Services
 {
     public class MapService : IMapService
     {
-        private string apiKey = "AIzaSyD-pJPalKTwQU6upHjAATDdvj4OO5aKwag";
+        private readonly GoogleMapConfig googleMapConfig;
+        private readonly ILogger<MapService> logger;
+        public MapService(IOptions<GoogleMapConfig> googleMapConfig, ILogger<MapService> logger)
+        {
+            this.googleMapConfig = googleMapConfig.Value;
+            this.logger = logger;
+        }
+
         public async Task<MapDto> GetMapDataAsync(double latitude, double longitude)
         {
             try
             {
                 using (var client = new HttpClient())
                 {
-                    var url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={apiKey}";
-                    var response = await client.GetAsync(url);
+                    var endPoint = $"{googleMapConfig.ApiEndpoint}?latlng={latitude},{longitude}&key={googleMapConfig.ApiKey}";
+                    var response = await client.GetAsync(endPoint);
                     response.EnsureSuccessStatusCode();
                     var responseBody = await response.Content.ReadAsStringAsync();
                     var mapDto = JsonConvert.DeserializeObject<MapDto>(responseBody);
-
-                    var locality = string.Empty;
-                    mapDto.Results.ForEach(result =>
-                    {
-                        result.AddressComponents.ForEach(address =>
-                        {
-                            if (address.Types.Any(type => type.ToLower() == "locality"))
-                            {
-                                locality = address.LongName;
-                            }
-                        });
-                    });
-
-                    var val = mapDto.Results.Select(r => r.AddressComponents
-                    .FirstOrDefault(a => a.LongName == "Pannipitiya"));
-
                     return mapDto;
                 }
             }
-            catch (HttpRequestException e)
+            catch (Exception exception)
             {
+                logger.LogError(exception.Message, exception);
                 return null;
             }
         }
+
+        public async Task<string> GetLocality(double latitude, double longitude)
+        {
+            var mapDto = await GetMapDataAsync(latitude, longitude);
+
+            if (mapDto is null || mapDto.Status.ToLower() != "ok")      
+                return string.Empty;          
+
+            var locality = mapDto.Results.FirstOrDefault()
+                .AddressComponents.FirstOrDefault(address => address.Types.Any(addrType => addrType.ToLower() == "locality")).LongName;
+
+            return locality;
+        }
+
     }
 }

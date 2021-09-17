@@ -8,6 +8,11 @@ namespace Location.Service.Dtos
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         public DateTime CreatedDate { get; set; }
-        public string Location { get; set; }
+        public string Locality { get; set; }
+
+        internal void SetLocality(string locality)
+        {
+            Locality = locality;
+        }
     }
 }
