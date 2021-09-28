@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Location.Service.Interfaces
+namespace Location.Core.Interfaces
 {
     public interface ICosmosDBService
     {

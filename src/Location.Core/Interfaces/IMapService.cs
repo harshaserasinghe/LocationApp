@@ -1,7 +1,7 @@
-﻿using Location.Service.Dtos.Google;
+﻿using Location.Core.Dtos.Google;
 using System.Threading.Tasks;
 
-namespace Location.Service.Interfaces
+namespace Location.Core.Interfaces
 {
     public interface IMapService
     {

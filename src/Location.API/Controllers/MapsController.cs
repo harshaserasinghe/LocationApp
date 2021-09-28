@@ -1,5 +1,5 @@
-﻿using Location.Service.Dtos.Google;
-using Location.Service.Interfaces;
+﻿using Location.Core.Dtos.Google;
+using Location.Core.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Net;

@@ -1,11 +1,7 @@
-﻿using Location.API.Middlewares;
-using Location.Common.Models;
+﻿using Location.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using System.Net;
 
-namespace GlobalErrorHandling.Extensions
+namespace Location.Core.Extensions
 {
     public static class ExceptionMiddlewareExtensions
     {       

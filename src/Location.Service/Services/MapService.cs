@@ -1,6 +1,6 @@
 ﻿using Location.Common.Settings;
-using Location.Service.Dtos.Google;
-using Location.Service.Interfaces;
+using Location.Core.Dtos.Google;
+using Location.Core.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

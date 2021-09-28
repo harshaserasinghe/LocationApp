@@ -1,5 +1,5 @@
-﻿using Location.Service.Dtos;
-using Location.Service.Interfaces;
+﻿using Location.Core.Dtos;
+using Location.Core.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;

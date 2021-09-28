@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using Location.Service.Dtos;
+using Location.Core.Dtos;
 
-namespace Location.API.Validations
+namespace Location.Core.Validations
 {
     public class LocationValidator : AbstractValidator<LocationCreateDto>
     {

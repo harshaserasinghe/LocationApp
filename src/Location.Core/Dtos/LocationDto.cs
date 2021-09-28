@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Location.Service.Dtos
+namespace Location.Core.Dtos
 {
     public class LocationDto
     {
@@ -10,7 +10,7 @@ namespace Location.Service.Dtos
         public DateTime CreatedDate { get; set; }
         public string Locality { get; set; }
 
-        internal void SetLocality(string locality)
+        public void SetLocality(string locality)
         {
             Locality = locality;
         }

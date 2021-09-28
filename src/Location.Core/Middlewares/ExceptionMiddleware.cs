@@ -1,13 +1,9 @@
 ﻿using Location.Common.Models;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
-using System.Net;
 using System.Threading.Tasks;
 
-namespace Location.API.Middlewares
+namespace Location.Core.Middlewares
 {
     public class ExceptionMiddleware
     {
