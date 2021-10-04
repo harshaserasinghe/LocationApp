@@ -1,5 +1,5 @@
 ﻿using Location.Common.Settings;
-using Location.Service.Interfaces;
+using Location.Core.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;

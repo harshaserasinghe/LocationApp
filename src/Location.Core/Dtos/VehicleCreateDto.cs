@@ -1,6 +1,6 @@
-﻿namespace Location.Service.Dtos
+﻿namespace Location.Core.Dtos
 {
-    public class VehicleDto
+    public class VehicleCreateDto
     {
         public string VehicleId { get; set; }
         public string LicenceNo { get; set; }

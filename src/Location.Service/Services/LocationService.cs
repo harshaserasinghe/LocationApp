@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Location.Common.Settings;
-using Location.Service.Dtos;
-using Location.Service.Interfaces;
+using Location.Core.Dtos;
+using Location.Core.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using System;
@@ -37,7 +37,7 @@ namespace Location.Service.Services
             if (!await vehicleService.IsRegisteredAsync(locationCreateDto.VehicleId))
                 throw new Common.Exceptions.ApplicationException((int)HttpStatusCode.BadRequest, "Vehicle is not registered");
 
-            var location = mapper.Map<Entities.Location>(locationCreateDto);
+            var location = mapper.Map<Core.Entities.Location>(locationCreateDto);
 
             await cosmosDBService.AddEntityAsync(location, cosmoDBConfig.LocationContainerId);
             location.UpdateId();
@@ -51,7 +51,7 @@ namespace Location.Service.Services
 
             try
             {
-                var location = await cosmosDBService.GetEntityAsync<Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, vehicleId, vehicleId);
+                var location = await cosmosDBService.GetEntityAsync<Core.Entities.Location>(cosmoDBConfig.CurrentLocationContainerId, vehicleId, vehicleId);
                 var locationDto = mapper.Map<LocationDto>(location);
                 var locality = await mapService.GetLocality(locationDto.Latitude, locationDto.Longitude);
                 locationDto.SetLocality(locality);
@@ -73,7 +73,7 @@ namespace Location.Service.Services
                 $"location.CreatedDate >= '{fromDateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")}' and " +
                 $"location.CreatedDate <= '{toDateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")}'";
 
-            var locationList = await cosmosDBService.GetEntitiesAsync<Entities.Location>(cosmoDBConfig.LocationContainerId, query);
+            var locationList = await cosmosDBService.GetEntitiesAsync<Core.Entities.Location>(cosmoDBConfig.LocationContainerId, query);
             var locationDtoList = mapper.Map<List<LocationDto>>(locationList);
             return locationDtoList;
         }

@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
-using Location.Service.Dtos;
-using Location.Service.Entities;
+using Location.Core.Dtos;
+using Location.Core.Entities;
 
-namespace Location.Service.Mappers
+namespace Location.Core.Mappers
 {
     public class VehicleMapper : Profile
     {

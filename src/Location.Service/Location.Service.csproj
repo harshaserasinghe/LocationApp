@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Location.Common\Location.Common.csproj" />
+    <ProjectReference Include="..\Location.Core\Location.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Location.Service.Dtos
+namespace Location.Core.Dtos
 {
     public class LocationCreateDto
     {

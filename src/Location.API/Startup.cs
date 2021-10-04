@@ -1,7 +1,7 @@
 using FluentValidation.AspNetCore;
-using GlobalErrorHandling.Extensions;
 using Location.Common.Settings;
-using Location.Service.Interfaces;
+using Location.Core.Extensions;
+using Location.Core.Interfaces;
 using Location.Service.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -77,11 +77,11 @@ namespace Location.API
 
             services.AddControllers().AddFluentValidation(opt =>
             {
-                opt.RegisterValidatorsFromAssembly(Assembly.Load("Location.API"));
+                opt.RegisterValidatorsFromAssembly(Assembly.Load("Location.Core"));
             });
 
 
-            services.AddAutoMapper(Assembly.Load("Location.Service"));
+            services.AddAutoMapper(Assembly.Load("Location.Core"));
 
             services.AddScoped<ICosmosDBService, CosmosDBService>();
             services.AddScoped<IVehicleService, VehicleService>();

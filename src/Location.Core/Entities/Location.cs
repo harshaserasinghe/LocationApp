@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 
-namespace Location.Service.Entities
+namespace Location.Core.Entities
 {
     public class Location
     {

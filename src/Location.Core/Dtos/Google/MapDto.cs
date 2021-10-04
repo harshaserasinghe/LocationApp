@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace Location.Service.Dtos.Google
+namespace Location.Core.Dtos.Google
 {
     public class MapDto
     {

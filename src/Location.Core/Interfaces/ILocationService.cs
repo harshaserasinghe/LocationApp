@@ -1,9 +1,9 @@
-﻿using Location.Service.Dtos;
+﻿using Location.Core.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Location.Service.Interfaces
+namespace Location.Core.Interfaces
 {
     public interface ILocationService
     {

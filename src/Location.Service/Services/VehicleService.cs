@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Location.Common.Exceptions;
 using Location.Common.Settings;
-using Location.Service.Dtos;
-using Location.Service.Entities;
-using Location.Service.Interfaces;
+using Location.Core.Dtos;
+using Location.Core.Entities;
+using Location.Core.Interfaces;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.Options;
 using System.Net;

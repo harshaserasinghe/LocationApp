@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Location.Service.Dtos;
+using Location.Core.Dtos;
 
-namespace Location.Service.Mappers
+namespace Location.Core.Mappers
 {
     public class LocationMapper : Profile
     {
